@@ -10,10 +10,11 @@ def get_save_root():
 
      return CONFIG_ROOT
 
-def save_model_config(model):
-    savepath = f"{get_save_root()}/{'checkpoint_' + datetime.now().strftime("%H-%M_%d-%m-%Y")}.pth"
+def save_model_config(model, name = 'checkpoint'):
+    savepath = f"{get_save_root()}/{f'{name}_{datetime.now().strftime("%H-%M_%d-%m-%Y")}'}.pth"
 
     torch.save(model.state_dict(), savepath)
+    print(f"saved to {savepath}")
 
 def load_model_config(model, file_name):
     model.load_state_dict(torch.load(f"{CONFIG_ROOT}/{file_name}"))
