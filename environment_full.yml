@@ -84,6 +84,7 @@ dependencies:
   - packaging=24.2=pyhd8ed1ab_2
   - pandas=2.2.3=py313hf91d08e_3
   - parso=0.8.4=pyhd8ed1ab_1
+  - patsy=1.0.1=pyhd8ed1ab_1
   - pcre2=10.44=h3d7b363_2
   - pickleshare=0.7.5=pyhd8ed1ab_1004
   - pillow=11.1.0=py313hda88b71_0
@@ -106,11 +107,16 @@ dependencies:
   - pyzmq=26.4.0=py313h2100fd5_0
   - qhull=2020.2=hc790b64_5
   - qt6-main=6.9.0=h83cda92_1
+  - scipy=1.15.2=py313h2eca4b9_0
+  - seaborn=0.13.2=hd8ed1ab_3
+  - seaborn-base=0.13.2=pyhd8ed1ab_3
   - six=1.17.0=pyhd8ed1ab_0
   - stack_data=0.6.3=pyhd8ed1ab_1
+  - statsmodels=0.14.4=py313h8e081ca_0
   - tbb=2021.13.0=h62715c5_1
   - tk=8.6.13=h5226925_1
   - tornado=6.4.2=py313ha7868ed_0
+  - tqdm=4.67.1=pyhd8ed1ab_1
   - traitlets=5.14.3=pyhd8ed1ab_1
   - typing_extensions=4.13.2=pyh29332c3_0
   - tzdata=2025b=h78e105d_0
