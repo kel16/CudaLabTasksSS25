@@ -3,15 +3,16 @@ import torch
 import torch.nn as nn
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
+from typing import List
 
 # re-used from Session1.ipynb
 def train(model: nn.Module, epochs: int, dataloader: DataLoader,
-          device: torch.device, criterion, optimizer: Optimizer):
+          device: torch.device, criterion, optimizer: Optimizer) -> List[float]:
     """
     Trains a neural model.
 
     Returns:
-    - list of batch errors
+    - List of batch errors
     """
     loss_list = []
 
@@ -22,8 +23,8 @@ def train(model: nn.Module, epochs: int, dataloader: DataLoader,
             imgs, labels = imgs.to(device), labels.to(device)
         
             # forward pass
-            flattened_imgs = imgs.flatten(start_dim=1)
-            predictions = model(flattened_imgs)
+            #flattened_imgs = imgs.flatten(start_dim=1)
+            predictions = model(imgs)
         
             # computing error
             loss = criterion(predictions, labels)
