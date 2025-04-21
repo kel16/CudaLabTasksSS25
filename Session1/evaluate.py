@@ -15,8 +15,7 @@ def evaluate(model, dataloader, device, confusion_matrix):
         labels = labels.to(device)
         
         # forward pass
-        flattened_imgs = imgs.flatten(start_dim=1)
-        preds = model(flattened_imgs)
+        preds = model(imgs)
         
         pred_labels = torch.argmax(torch.softmax(preds, dim=-1), dim=-1)
         cur_correct = len(torch.where(pred_labels == labels)[0])

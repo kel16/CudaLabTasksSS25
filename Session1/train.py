@@ -3,16 +3,17 @@ import torch
 import torch.nn as nn
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
+from typing import List
 
 
 def train(model: nn.Module, epochs: int, dataloader: DataLoader,
           device: torch.device, criterion, optimizer: Optimizer,
-          lr_scheduler = None):
+          lr_scheduler = None) -> List[float]:
     """
     Trains a neural model.
 
     Returns:
-    - list of batch errors
+    - List of batch errors
     """
     loss_list = []
 

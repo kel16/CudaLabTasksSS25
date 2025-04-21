@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import List
 
 def smooth(f, K = 5):
     """ Smoothing a function using a low-pass filter (mean) of size K """
@@ -10,7 +11,7 @@ def smooth(f, K = 5):
     
     return smooth_f
 
-def plot_learning_curve(loss_list: list[int]):
+def plot_learning_curve(loss_list: List[int]):
     plt.style.use('seaborn-v0_8')
     fig, ax = plt.subplots(1, 2)
     fig.set_size_inches(18, 5)
