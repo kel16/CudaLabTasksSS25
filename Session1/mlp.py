@@ -20,6 +20,11 @@ class MLP(nn.Module):
         layers.add_module("act2", nn.ReLU())
         if use_dropout:
             layers.add_module("drop2", nn.Dropout(0.5))
+        # An additional layer gave no improvement in accuracy
+        # layers.add_module("dense3", nn.Linear(hidden_dim, hidden_dim))
+        # layers.add_module("act3", nn.ReLU())
+        # if use_dropout:
+        #     layers.add_module("drop3", nn.Dropout(0.5))
         layers.add_module("output", nn.Linear(hidden_dim, output_dim))
         # layers.add_module("outact", nn.Sigmoid())
 
@@ -27,8 +32,9 @@ class MLP(nn.Module):
         
     def forward(self, x):
         """ Forward pass through the model"""
-        assert len(x.shape) == 2, f"ERROR! Shape of input must be 2D (b_size, dim)"
-        pred = self.layers(x)
+        flattened_x = x.flatten(start_dim=1)
+        assert len(flattened_x.shape) == 2, f"ERROR! Shape of input must be 2D (b_size, dim)"
+        pred = self.layers(flattened_x)
         
         return pred
 

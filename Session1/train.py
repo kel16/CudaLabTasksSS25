@@ -4,9 +4,10 @@ import torch.nn as nn
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 
-# re-used from Session1.ipynb
+
 def train(model: nn.Module, epochs: int, dataloader: DataLoader,
-          device: torch.device, criterion, optimizer: Optimizer):
+          device: torch.device, criterion, optimizer: Optimizer,
+          lr_scheduler = None):
     """
     Trains a neural model.
 
@@ -22,8 +23,7 @@ def train(model: nn.Module, epochs: int, dataloader: DataLoader,
             imgs, labels = imgs.to(device), labels.to(device)
         
             # forward pass
-            flattened_imgs = imgs.flatten(start_dim=1)
-            predictions = model(flattened_imgs)
+            predictions = model(imgs)
         
             # computing error
             loss = criterion(predictions, labels)
@@ -37,6 +37,8 @@ def train(model: nn.Module, epochs: int, dataloader: DataLoader,
         
             # updating parameters
             optimizer.step()
+            if lr_scheduler:
+                lr_scheduler.step()
         
             if(i % 10 == 0 or i == len(dataloader) - 1):
                 progress_bar.set_description(f"Epoch {epoch + 1} Iteration {i + 1}: loss {loss.item():.5f}. ")
