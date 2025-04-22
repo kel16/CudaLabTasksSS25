@@ -21,6 +21,10 @@ class MLP(nn.Module):
         layers.add_module("act2", nn.ReLU())
         if use_dropout:
             layers.add_module("drop2", nn.Dropout(0.5))
+        layers.add_module("dense3", nn.Linear(hidden_dim, hidden_dim))
+        layers.add_module("act3", nn.ReLU())
+        if use_dropout:
+            layers.add_module("drop3", nn.Dropout(0.5))
         layers.add_module("output", nn.Linear(hidden_dim, output_dim))
         # layers.add_module("outact", nn.Sigmoid())
 

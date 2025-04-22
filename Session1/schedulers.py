@@ -1,7 +1,7 @@
 import math
 from torch.optim import Optimizer
 
-def cosine_decay(epoch: int, epochs: int):
+def cosine_decay(epoch: int, epochs: int) -> float:
     return 0.5 * (1 + math.cos(math.pi * epoch / epochs))
 
 def linear_decay(epoch: int, epochs: int) -> float:
@@ -17,13 +17,14 @@ class LearningRateScheduler:
         self.current_lr = 0
         
     def step(self):
+        current_step = self.current_epoch + 1
         # gradually increase LR up to target when warmup epochs are given
         if self.current_epoch < self.start_epoch:
-            self.current_lr = self.lr_base * (self.current_epoch + 1) / self.start_epoch
+            self.current_lr = self.lr_base * current_step / float(self.start_epoch)
         # o/w compute decaying rate
         else:
             # no decay rate func given => use constant LR
-            decay_rate = self.get_decay_rate(self.current_epoch - self.start_epoch) if self.get_decay_rate else 1.0
+            decay_rate = self.get_decay_rate(current_step - self.start_epoch) if self.get_decay_rate else 1.0
             self.current_lr = self.lr_base * decay_rate
         
         # source: https://discuss.pytorch.org/t/how-could-i-design-my-own-optimizer-scheduler/26810

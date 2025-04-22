@@ -36,4 +36,21 @@ def plot_learning_curve(train_loss_list: List[int], val_loss_list: List[int], nu
     ax[1].set_title("Training Progress (logscale)")
    
     plt.show()
-    
+
+def plot_images(images, teacher_labels, predicted_labels, classes):
+    """
+    accepts list of images, corresponding true/output labels and list of label names
+    """
+    plt.figure(figsize=(12, 6))
+    for i in range(min(8, len(images))):
+        # img = images[i]
+        # Unnormalize image (CIFAR-10 specific)
+        img = images[i] / 2 + 0.5  # [-1, 1] -> [0, 1]
+        img = img.permute(1, 2, 0)  # (C, H, W) -> (H, W, C)
+        
+        plt.subplot(2, 4, i + 1)
+        plt.imshow(img)
+        plt.title(f"Ground truth: {classes[teacher_labels[i]]}\nPrediction: {classes[predicted_labels[i]]}")
+        plt.axis('off')
+    plt.tight_layout()
+    plt.show()
