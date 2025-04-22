@@ -120,7 +120,7 @@ class Residual(nn.Module):
     def forward(self, x):
         return self.fn(x) + x
 
-def ConvMixer(input_dim, depth, kernel_size=9, patch_size=7, n_classes=10):
+def ConvMixer(input_dim, depth, kernel_size=9, patch_size=4, n_classes=10):
     """ 
     Modified implementation from https://arxiv.org/pdf/2201.09792
     """

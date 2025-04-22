@@ -27,7 +27,7 @@ def plot_learning_curve(train_loss_list: List[int], val_loss_list: List[int], nu
     ax[0].set_title("Training Progress (linearscale)") 
     
     ax[1].plot(train_loss_list, c="blue", label="Training Loss", linewidth=3, alpha=0.5)
-    ax[1].plot(smooth_loss, c="red", label="Smoothed Loss", linewidth=3)
+    ax[1].plot(smooth_loss, c="red", label="Smoothed Training Loss", linewidth=3)
     ax[1].plot(indices, val_loss_list, c="black", label="Validation Loss", linewidth=3, alpha=0.5)
     ax[1].legend(loc="best")
     ax[1].set_xlabel("Iteration")
