@@ -85,8 +85,9 @@ class CNN(nn.Module):
         hidden_dim = 64
         self.fc1 = nn.Linear(in_features=in_dim, out_features=hidden_dim)
         relu4 = nn.ReLU()
+        dropout4 = nn.Dropout(p=0.5) if use_dropout else nn.Identity()
         self.fc_layer1 = nn.Sequential(
-                self.fc1, relu4
+                self.fc1, relu4, dropout4
             )
         # fully connected layer 2
         self.fc2 = nn.Linear(in_features=hidden_dim, out_features=output_dim)
@@ -105,6 +106,31 @@ class CNN(nn.Module):
         out4_flat = self.fc_layer1(out3_flat)
         y = self.fc_layer2(out4_flat)
         return y
+    
+
+class Residual(nn.Module):
+    def __init__(self, fn):
+        super().__init__()
+        self.fn = fn
+
+    def forward(self, x):
+        return self.fn(x) + x
+
+def ConvMixer(input_dim, depth, kernel_size=9, patch_size=7, n_classes=10):
+    """ 
+    Modified implementation from https://arxiv.org/pdf/2201.09792
+    """
+    return nn.Sequential(nn.Conv2d(3, input_dim[-1], kernel_size=patch_size, stride=patch_size),
+                         nn.GELU(), nn.BatchNorm2d(input_dim[-1]),
+                         *[nn.Sequential(Residual(nn.Sequential(nn.Conv2d(input_dim[-1], input_dim[-1], 
+                                                                          kernel_size, groups=input_dim[-1], padding="same"),
+                                                                nn.GELU(), nn.BatchNorm2d(input_dim[-1]))),
+                                         nn.Conv2d(input_dim[-1], input_dim[-1], kernel_size=1), nn.GELU(), 
+                                         nn.BatchNorm2d(input_dim[-1])) 
+                           for i in range(depth)],
+                         nn.AdaptiveAvgPool2d((1,1)),
+                         nn.Flatten(),
+                         nn.Linear(input_dim[-1], n_classes))
 
 
     
