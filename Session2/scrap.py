@@ -83,8 +83,9 @@ def google_image_search(
     print(f"[{class_name}] Total downloaded: {total_downloaded}")
 
 classes = {
-    # "robot": ["robot face", "android head", "cyberpunk robot", "humanoid robot"],
-    "person": ["human face", "man portrait", "professional profile picture", "person profile photo", "football player"]
+    "robot": ["robot", "boston robotics", "humanoid robot", "robot assistant"],
+    # "person": ["sport player picture", "human full body professional photo", "a dancing person", "advertising person", "man portrait", "football player"]
+    # "person": ["office person full height", "confident person gives speech"]
 }
 
 if __name__=="__main__":
