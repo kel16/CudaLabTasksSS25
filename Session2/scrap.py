@@ -8,7 +8,7 @@ from pathlib import Path
 SCRIPT_PATH = Path(__file__).parent.resolve()
 KEYS_FILENAME = "secrets.json"
 DATASET_ROOT = "images"
-# google limtis image search to 10 results; max 100 queries/day
+# google limits image search to 10 results; max 100 queries/day
 GOOGLE_SEARCH_LIMIT = 10
 
 def read_keys():
@@ -83,13 +83,15 @@ def google_image_search(
     print(f"[{class_name}] Total downloaded: {total_downloaded}")
 
 classes = {
-    "robot": ["robot", "boston robotics", "humanoid robot", "robot assistant"],
+    # "robot": ["robot", "boston robotics", "humanoid robot", "robot assistant"],
+    # "robot": ["moving humanoid robot"],
+    "person": ["human standing photo"],
     # "person": ["sport player picture", "human full body professional photo", "a dancing person", "advertising person", "man portrait", "football player"]
-    # "person": ["office person full height", "confident person gives speech"]
+    # "person": ["office person full height", "confident person gives speech", "walking person photo"]
 }
 
 if __name__=="__main__":
     api_key, cse_id = read_keys()
     
     for class_name, variants in classes.items():
-        google_image_search(class_name, variants, api_key, cse_id, root_dir="images", images_per_variant=30)
+        google_image_search(class_name, variants, api_key, cse_id, root_dir="images", images_per_variant=50)
