@@ -9,3 +9,5 @@ venv/
 
 # Locally stored datasets
 data/
+
+secrets.json
