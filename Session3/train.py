@@ -35,7 +35,7 @@ def train_epoch(model, train_loader, optimizer, criterion, epoch, device):
     
     return mean_loss, loss_list
 
-def train_model(model, optimizer, scheduler, criterion, train_loader, valid_loader, num_epochs, should_save = True):
+def train_model(model, optimizer, scheduler, criterion, train_loader, valid_loader, num_epochs, device, logger=None, start_epoch=0, should_save = True):
     """ Training a model for a given number of epochs"""
     
     train_loss = []
@@ -62,6 +62,12 @@ def train_model(model, optimizer, scheduler, criterion, train_loader, valid_load
             )
         scheduler.step()
         train_loss.append(mean_loss)
+
+        if logger:
+            logger(f'Accuracy/Valid', accuracy, global_step=epoch+start_epoch)
+            logger(f'Loss/Valid', loss, global_step=epoch+start_epoch)
+            logger(f'Loss/Train', mean_loss, global_step=epoch+start_epoch)
+
         loss_iters = loss_iters + cur_loss_iters
         
         print(f"Epoch {epoch+1}/{num_epochs}")
