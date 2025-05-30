@@ -5,7 +5,7 @@ from torchvision.utils import save_image
 import numpy as np
 
 @torch.no_grad()
-def eval_model(model, eval_loader, criterion, device, epoch=None, savefig=False, savepath="", writer=None):
+def eval_model(model, eval_loader, criterion, device, kl_weight, epoch=None, savefig=False, savepath="", writer=None):
     """ Evaluating the model for either validation or test """
     loss_list = []
     recons_loss = []
@@ -17,7 +17,7 @@ def eval_model(model, eval_loader, criterion, device, epoch=None, savefig=False,
         # Forward pass 
         recons, (z, mu, log_var) = model(images)
                  
-        loss, (mse, kld) = criterion(recons, images, mu, log_var)
+        loss, (mse, kld) = criterion(recons, images, mu, log_var, kl_weight)
         loss_list.append(loss.item())
         recons_loss.append(mse.item())
         kld_loss.append(kld.item())
