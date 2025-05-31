@@ -51,9 +51,6 @@ def get_fid(model, dataloader, device, num_samples = 1000):
     mean_fake, cov_fake = np.mean(fake_features, axis=0), np.cov(fake_features, rowvar=False)
     
     covmean = sqrtm(cov_real.dot(cov_fake))
-    if np.iscomplexobj(covmean):
-        print('fake indeed')
-        covmean = covmean.real
     
     diff = mean_real - mean_fake
     fid = diff.dot(diff) + np.trace(cov_real + cov_fake - 2 * covmean)
