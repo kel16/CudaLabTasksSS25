@@ -1,6 +1,5 @@
 import os
 import torch
-import numpy as np
 
 
 SAVED_MODELS_ROOT = "checkpoints"
