@@ -11,11 +11,11 @@ def eval_model(model, eval_loader, criterion, device, kl_weight, epoch=None, sav
     recons_loss = []
     kld_loss = []
     
-    for i, (images, _) in enumerate(eval_loader):
+    for i, (images, labels) in enumerate(eval_loader):
         images = images.to(device)
         
         # Forward pass 
-        recons, (z, mu, log_var) = model(images)
+        recons, (z, mu, log_var) = model(images, labels)
                  
         loss, (mse, kld) = criterion(recons, images, mu, log_var, kl_weight)
         loss_list.append(loss.item())

@@ -26,12 +26,12 @@ def train_epoch(model, train_loader, optimizer, criterion, kl_weight, device):
     recons_loss = []
     vae_loss = []
 
-    for i, (images, _) in enumerate(train_loader):
+    for i, (images, labels) in enumerate(train_loader):
         images = images.to(device)
         
         optimizer.zero_grad()
         
-        recons, (_, mu, log_var) = model(images)
+        recons, (_, mu, log_var) = model(images, labels)
 
         loss, (mse, kld) = criterion(recons, images, mu, log_var, kl_weight)
         loss_list.append(loss.item())
@@ -47,14 +47,15 @@ def train_epoch(model, train_loader, optimizer, criterion, kl_weight, device):
     return mean_loss, loss_list
 
 def train_model(model, optimizer, scheduler, criterion, train_loader, valid_loader,
-                num_epochs, device, save_frequency=5, vis_frequency=2, kl_weight=1e-3):
+                num_epochs, device, save_frequency=5, vis_frequency=2, kl_weight=1e-3, 
+               model_name='ConvVAE'):
     """ Training a model for a given number of epochs"""
     timestamp = datetime.now().strftime("%H-%M_%d-%m-%Y")
     save_path_root = f"{get_save_root()}/{timestamp}"
     if(not os.path.exists(save_path_root)):
         os.makedirs(save_path_root)
 
-    TBOARD_LOGS = os.path.join(os.getcwd(), "tboard_logs", "ConvVAE", timestamp)
+    TBOARD_LOGS = os.path.join(os.getcwd(), "tboard_logs", model_name, timestamp)
     if not os.path.exists(TBOARD_LOGS):
         os.makedirs(TBOARD_LOGS)
     shutil.rmtree(TBOARD_LOGS)
