@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class ConvBlock(nn.Module):
@@ -118,7 +119,7 @@ class Generator(nn.Module):
         self.model = nn.Sequential(*layers)
         return
     
-    def forward(self, x):
+    def forward(self, x, y=None):
         """ Forward pass through generator """
         y = self.model(x)
         return y
@@ -161,7 +162,104 @@ class Discriminator(nn.Module):
         self.model = nn.Sequential(*layers)
         return
       
-    def forward(self, x):
+    def forward(self, x, y=None):
         """ Forward pass """
         y = self.model(x)
         return y
+    
+
+class CondGenerator(nn.Module):
+    """
+    A fully convolutional conditional generator using ReLU activations. 
+    Takes as input a latent vector and outputs a fake sample.
+       (B, latent_dim, 1, 1) + label --> (B, 3, 64, 64)
+    """
+    def __init__(self, latent_dim=128, num_channels=1, base_channels=32, num_classes=3):
+        """ Model initializer """
+        super().__init__()
+
+        self.num_classes = num_classes
+        layers = []
+        for i in range(5):
+            layers.append(
+                ConvTransposeBlock(
+                        in_channels=latent_dim + self.num_classes if i == 0 else base_channels * 2 ** (4-i+1),
+                        out_channels=base_channels * 2 ** (4-i),
+                        kernel_size=4,
+                        stride=1 if i == 0 else 2,
+                        add_norm=True,
+                        activation="ReLU"
+                    )
+                )
+        layers.append(
+            ConvTransposeBlock(
+                    in_channels=base_channels,
+                    out_channels=num_channels,
+                    kernel_size=4,
+                    stride=2,
+                    add_norm=False,
+                    activation="Tanh"
+                )
+            )
+        
+        self.model = nn.Sequential(*layers)
+        return
+    
+    def forward(self, x, y):
+        """ Forward pass through generator """
+        y = F.one_hot(y, self.num_classes).float().to(x.device)
+        y = y.unsqueeze(2).unsqueeze(3) #here size will be (B, num_classes, 1, 1)
+        x_cat = torch.cat([x, y], dim=1)
+        y = self.model(x_cat)
+        return y
+    
+
+class CondDiscriminator(nn.Module):
+    """ A fully convolutional conditional discriminator using LeakyReLU activations. 
+    Takes as input either a real or fake sample and predicts its autenticity.
+       (B, 3, 64, 64) + label  -->  (B, 1, 1, 1)
+    """
+    def __init__(self, in_channels=3, out_dim=1, base_channels=16, dropout=0.3, num_classes=3):
+        """ Module initializer """
+        super().__init__()  
+        
+        self.num_classes = num_classes
+        layers = []
+        for i in range(4):
+            layers.append(
+                ConvBlock(
+                        in_channels=in_channels + self.num_classes if i == 0 else base_channels * 2 ** i,
+                        out_channels=base_channels * 2 ** (i + 1),
+                        kernel_size=4,
+                        add_norm=True,
+                        activation="LeakyReLU",
+                        dropout=dropout,
+                        stride=2
+                    )
+                )
+        layers.append(
+                ConvBlock(
+                        in_channels=256,
+                        out_channels=1,
+                        kernel_size=4,
+                        stride=2,
+                        add_norm=False,
+                        activation="Sigmoid",
+                        padding=0
+                    )
+                )
+        
+        self.model = nn.Sequential(*layers)
+        return
+      
+    def forward(self, x, y):
+        """ Forward pass """
+        
+        B, _, _, _ = x.shape
+        
+        y = F.one_hot(y, self.num_classes).float()
+        y_img = y.view(B, self.num_classes, 1, 1).expand(-1, -1, 64, 64).to(x.device)
+        x_cat = torch.cat([x, y_img], dim=1)
+        y = self.model(x_cat)
+        return y
+   
