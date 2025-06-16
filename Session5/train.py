@@ -85,13 +85,19 @@ class Trainer:
         return d_loss_real, d_loss_fake, g_loss
     
     @torch.no_grad()
-    def generate(self, N=64):
+    def generate(self, N=64, labels=None):
         """ Generating a bunch of images using current state of generator """
         self.generator.eval()
         latent = torch.randn(N, self.latent_dim, 1, 1).to(self.device)
-        imgs = self.generator(latent)
+        
+        num_classes = 3
+        if labels is None:
+            labels = torch.randint(0, num_classes, (N,), device=self.device)
+        
+        imgs = self.generator(latent, labels)
         imgs = imgs * 0.5 + 0.5
         return imgs
+
         
     def train(self, data_loader, N_iters=10000, init_step=0):
         """ Training the models for several iterations """
