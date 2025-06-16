@@ -129,12 +129,12 @@ class Discriminator(nn.Module):
     Takes as input either a real or fake sample and predicts its autenticity.
        (B, 3, 64, 64)  -->  (B, 1, 1, 1)
     """
-    def __init__(self, in_channels=3, out_dim=1, base_channels=32, dropout=0.3):
+    def __init__(self, in_channels=3, out_dim=1, base_channels=16, dropout=0.3):
         """ Module initializer """
         super().__init__()  
         
         layers = []
-        for i in range(5):
+        for i in range(4):
             layers.append(
                 ConvBlock(
                         in_channels=in_channels if i == 0 else base_channels * 2 ** i,
@@ -148,10 +148,10 @@ class Discriminator(nn.Module):
                 )
         layers.append(
                 ConvBlock(
-                        in_channels=1024,
+                        in_channels=256,
                         out_channels=1,
-                        kernel_size=3,
-                        stride=1,
+                        kernel_size=4,
+                        stride=2,
                         add_norm=False,
                         activation="Sigmoid",
                         padding=0
