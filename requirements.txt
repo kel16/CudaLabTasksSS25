@@ -16,3 +16,4 @@ tqdm
 networkx<3.0
 
 timm
+kagglehub
