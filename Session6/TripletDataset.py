@@ -27,9 +27,13 @@ class TripletDataset(torch.utils.data.Dataset):
 
         positive_indices = self.label_to_indices[anchor_lbl]
         positive_index = i
-        # if indices coincide, re-pick
-        while positive_index == i:
-            positive_index = random.choice(positive_indices)
+
+        if len(positive_indices) > 1:
+            # if indices coincide, re-pick
+            while positive_index == i:
+                positive_index = random.choice(positive_indices)
+
+        positive_index = random.choice(positive_indices)
         pos_img, _ = self.dataset[positive_index]
 
         negative_label = random.choice([lbl for lbl in self.label_to_indices if lbl != anchor_lbl])

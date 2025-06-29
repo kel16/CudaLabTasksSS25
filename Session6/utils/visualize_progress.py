@@ -1,7 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from utils.visualize import smooth
+def smooth(f, K=5):
+    """ Smoothing a function using a low-pass filter (mean) of size K """
+    kernel = np.ones(K) / K
+    f = np.concatenate([f[:int(K//2)], f, f[int(-K//2):]])  # to account for boundaries
+    smooth_f = np.convolve(f, kernel, mode="same")
+    smooth_f = smooth_f[K//2: -K//2]  # removing boundary-fixes
+    
+    return smooth_f
 
 def visualize_progress(train_loss, val_loss, start=0):
     """ Visualizing loss and accuracy """

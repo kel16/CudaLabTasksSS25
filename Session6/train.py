@@ -7,9 +7,10 @@ class Trainer:
     Class for training and validating a siamese model
     """
     
-    def __init__(self, model, criterion, train_loader, valid_loader, n_iters=1e4):
+    def __init__(self, model, criterion, train_loader, valid_loader, n_iters=1e4, writer=None):
         """ Trainer initializer """
         self.model = model
+        self.writer = writer
         self.criterion = criterion
         self.train_loader = train_loader
         self.valid_loader = valid_loader
@@ -77,6 +78,7 @@ class Trainer:
                 if(self.iter_ % 250 == 0):
                     cur_losses = self.valid_step()
                     print(f"Valid loss @ iteration {self.iter_}: Loss={np.mean(cur_losses)}")
+                    if self.writer: self.writer.add_scalar("Loss", loss.item(), global_step=self.iter_)
                 
                 self.iter_ = self.iter_+1 
                 if(self.iter_ >= self.n_iters):
