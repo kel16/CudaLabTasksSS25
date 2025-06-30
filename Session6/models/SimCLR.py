@@ -9,7 +9,7 @@ class SimCLR(nn.Module):
     def __init__(self, hidden_dim=512, output_dim=128):
         super().__init__()
 
-        # Use a pre-trained ResNet18 but modify for grayscale input
+        # Use a pre-trained ResNet18
         self.backbone = torchvision.models.resnet18(pretrained=False)
         self.backbone.fc = nn.Identity()
 
