@@ -10,7 +10,7 @@ class ViT(nn.Module):
     Vision Transformer for image classification
     """
 
-    def __init__(self, patch_size, token_dim, attn_dim, num_heads, mlp_size, num_tf_layers, num_classes):
+    def __init__(self, patch_size, max_len, token_dim, attn_dim, num_heads, mlp_size, num_tf_layers, num_classes):
         """ Model initializer """
         super().__init__()
 
@@ -23,7 +23,7 @@ class ViT(nn.Module):
 
         # adding CLS token and positional embedding
         self.cls_token = nn.Parameter(torch.randn(1, token_dim) / (token_dim ** 0.5), requires_grad=True)
-        self.pos_emb = PositionalEncoding(token_dim)
+        self.pos_emb = PositionalEncoding(token_dim, max_len)
 
         # cascade of transformer blocks
         transformer_blocks = [

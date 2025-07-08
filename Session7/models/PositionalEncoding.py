@@ -14,7 +14,7 @@ class PositionalEncoding(nn.Module):
         Length of the sequence.
     """
 
-    def __init__(self, d_model, max_len=50):
+    def __init__(self, d_model, max_len):
         """
         Initializing the positional encoding
         """
